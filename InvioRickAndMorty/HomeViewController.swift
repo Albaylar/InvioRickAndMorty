@@ -22,6 +22,7 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.hidesBackButton = true
         setUpTableView()
         setUpCollectionView()
         setLocations()
@@ -147,23 +148,23 @@ extension HomeViewController {
         
     private func getCharacters(for location: Location) {
         characters = []
-
+        
         let residentUrls = location.residents.map { URL(string: $0) }
-
         let validUrls = residentUrls.compactMap { $0 }
-
-        let residentIds = validUrls.map { $0.lastPathComponent }.joined(separator: ",")
-
-        NetworkManager.shared.getCharacters(from: residentIds) { [weak self] result in
+        let residentIdsArray = validUrls.compactMap { Int($0.lastPathComponent) }
+        let residentIds = residentIdsArray.map(String.init).joined(separator: ",")
+        
+        NetworkManager.shared.getResidents(locationID: residentIds) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let apiData):
-                let characters = apiData.results ?? []
-
-                self.characters = characters
-
-                DispatchQueue.main.async {
-                    self.charTableView.reloadData()
+                if let characters = apiData.results {
+                    self.locations = characters
+                    DispatchQueue.main.async {
+                        self.charTableView.reloadData()
+                    }
+                } else {
+                    self.showError("Characters not found.")
                 }
             case .failure(let error):
                 print(error)
@@ -171,6 +172,7 @@ extension HomeViewController {
             }
         }
     }
+
 
     private func setSelectedLocation(for locationId: Int) {
         let selectedLocation = locations.first { $0.id == locationId }

@@ -28,13 +28,13 @@ class NetworkManager {
         request(endPoint, completion: completion)
     }
     
-    func getResidents(locationID: Int, completion: @escaping (Result<LocationData, Error>) -> Void) {
+    func getResidents(locationID: String, completion: @escaping (Result<LocationData, Error>) -> Void) {
         let endPoint = EndPoint.getResidents(locationID: locationID)
         request(endPoint, completion: completion)
     }
     
-    func getCharacters(from url: String,completion:@escaping (Result<CharacterData, Error>) -> Void) {
-        let endPoint = EndPoint.getCharacters
+    func getCharacters(from ids: String,completion:@escaping (Result<CharacterData, Error>) -> Void) {
+        let endPoint = EndPoint.getCharacters(ids: ids)
         request(endPoint, completion: completion)
     }
     
