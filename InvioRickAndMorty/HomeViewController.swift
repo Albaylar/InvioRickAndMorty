@@ -17,8 +17,11 @@ class HomeViewController: UIViewController {
     private var selectedIndexPath: IndexPath?
     private var selectedLocationId: Int?
     private var selectedLocation : [Location] = []
+    
     private var locations: [Location] = []
     private var characters: [Character] = []
+    var networkManager = NetworkManager.shared
+    var residents: [ResidentData] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +29,7 @@ class HomeViewController: UIViewController {
         setUpTableView()
         setUpCollectionView()
         setLocations()
+ 
         
     }
 
@@ -51,8 +55,9 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedLocation = locations[indexPath.row]
-        print("Selected Location: \(selectedLocation.name)")
+        let location = locations[indexPath.row]
+        let selectedLocation = location.id
+        print("Selected Location: \(location.name)")
         
         if selectedIndexPath == indexPath {
             // If user tapped on the same cell again, we don't need to fetch data again
@@ -61,10 +66,10 @@ extension HomeViewController: UICollectionViewDelegate {
         
         selectedIndexPath = indexPath
         
-        if selectedLocation.residents.isEmpty {
+        if location.residents.isEmpty {
             showError("No residents found.")
         } else {
-            setSelectedLocation(for: selectedLocation.id) // Seçilen lokasyonu güncelle
+            setSelectedLocation(for: selectedLocation) // Seçilen lokasyonu güncelle
         }
         
         collectionView.reloadData()
@@ -120,74 +125,81 @@ extension HomeViewController: UITableViewDataSource {
 
         return cell
     }
+
 }
 extension HomeViewController {
+    
     private func setLocations() {
-            NetworkManager.shared.getLocations { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let apiData):
-                    let locations = apiData.results ?? []
-                    self.locations = locations
-                    
-                    // Set the default location to the previously selected location
-                    if let selectedLocationId = self.selectedLocationId {
-                        self.setSelectedLocation(for: selectedLocationId)
-                    } else {
-                        self.locationCollectionView.reloadData()
-                    }
-                    
-                    
-                case .failure(let error):
-                    print(error)
-                    self.showError(error.localizedDescription)
-                }
-            }
-        }
-
-        
-    private func getCharacters(for location: Location) {
-        characters = []
-        
-        let residentUrls = location.residents.map { URL(string: $0) }
-        let validUrls = residentUrls.compactMap { $0 }
-        let residentIdsArray = validUrls.compactMap { Int($0.lastPathComponent) }
-        let residentIds = residentIdsArray.map(String.init).joined(separator: ",")
-        
-        NetworkManager.shared.getResidents(locationID: residentIds) { [weak self] result in
+        NetworkManager.shared.getLocations { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success(let apiData):
-                if let characters = apiData.results {
-                    self.locations = characters
-                    DispatchQueue.main.async {
-                        self.charTableView.reloadData()
-                    }
+            case .success(let locations):
+                self.locations = locations
+                
+                // Set the default location to the previously selected location
+                if let selectedLocationId = self.selectedLocationId {
+                    self.setSelectedLocation(for: selectedLocationId)
                 } else {
-                    self.showError("Characters not found.")
+                    self.locationCollectionView.reloadData()
                 }
+                
             case .failure(let error):
                 print(error)
                 self.showError(error.localizedDescription)
             }
         }
     }
+    
+    
+    func setSelectedLocation(for locationID: Int) {
+        NetworkManager.shared.getLocation(id: locationID) { [weak self] result in
+            switch result {
+            case .success(let locations):
+                // Seçilen konumu alın
+                guard let selectedLocation = locations.first else {
+                    print("Selected location not found.")
+                    return
+                }
+                
+                
+                let residentURLs = selectedLocation.residents
+                print(residentURLs)
+                let residentIDs = residentURLs.compactMap({Int($0.split(separator: "/").last ?? "")})
+                print(residentIDs)
+                let residentIDStrings = residentIDs.map { String($0) }
+                
+                let lastURL = "https://rickandmortyapi.com/api/character/\(residentIDs)"
+                print(lastURL)
 
-
-    private func setSelectedLocation(for locationId: Int) {
-        let selectedLocation = locations.first { $0.id == locationId }
-        self.selectedLocationId = selectedLocation?.id
-        
-        if let selectedLocation = selectedLocation {
-            self.selectedLocation = [selectedLocation]
-            getCharacters(for: selectedLocation)
-        } else {
-            self.selectedLocation = []
-            characters = []
-            charTableView.reloadData()
+                
+                // Karakterleri alma isteği oluştur
+                NetworkManager.shared.getMultipleCharacters(ids: lastURL) { result in
+                    switch result {
+                    case .success(let characterResponse):
+                        
+                        let characters = characterResponse.results
+                        self?.characters = characters ?? []
+                        
+                        // Reload the table view data to display the character information
+                        DispatchQueue.main.async {
+                            self?.charTableView.reloadData()
+                        }
+                        
+                        print("Characters in \(selectedLocation.name):")
+                        for character in self?.characters ?? [] {
+                            print(character.name)
+                        }
+                        
+                    case .failure(let error):
+                        print("Error fetching character details: \(error.localizedDescription)")
+                        // Handle the error here
+                    }
+                }
+                
+            case .failure(let error):
+                print(error)
+                self?.showError(error.localizedDescription)
+            }
         }
     }
-
-
 }
-

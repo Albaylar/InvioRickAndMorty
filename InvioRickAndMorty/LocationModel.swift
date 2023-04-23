@@ -10,12 +10,13 @@ import Foundation
 struct LocationData: Codable {
     let results: [Location]?
 }
-struct Location: Codable,Equatable {
+struct Location: Codable, Equatable {
     let id: Int
     let name: String
     let type: String
     let dimension: String
-    let residents: [String]
+    let residents: [String] 
     let url: String
     let created: String
 }
+

@@ -5,86 +5,62 @@
 //  Created by Furkan Deniz Albaylar on 18.04.2023.
 //
 
-    import Foundation
+import Alamofire
+import Foundation
 
-    enum HTTPMethod: String {
-        case get = "GET"
-        case post = "POST"
-        case delete = "DELETE"
-        case patch = "PATCH"
+enum EndPoint {
+    case getLocations
+    case getMultipleCharacters(ids: String)
+    case getLocation(id: Int)
+}
+
+protocol EndpointProtocol {
+    var baseURL: String { get }
+    var path: String { get }
+    var method: HTTPMethod { get }
+    var headers: [String: String]? { get }
+
+    func request() -> URLRequest
+}
+
+extension EndPoint: EndpointProtocol {
+    var baseURL: String {
+        return "https://rickandmortyapi.com/api"
     }
-
-    enum EndPoint {
-        case getLocation
-        case getResidents(locationID: String)
-        case getCharacters(ids: String)
-        
-    }
-
-    protocol EndpointProtocol {
-        var baseURL: String { get }
-        var path: String { get }
-        var method: HTTPMethod { get }
-        var headers: [String: String]? { get }
-        var parameters: [String: Any]? { get }
-        
-        func request() -> URLRequest
-    }
-
-    extension EndPoint: EndpointProtocol {
-        var baseURL: String {
-            return "https://rickandmortyapi.com/api"
-        }
-        
-        var path: String {
-            switch self {
-            case .getLocation:
-                return "/location"
-            case .getResidents(let locationID):
-                return "/location/\(locationID)"
-            case .getCharacters(let ids):
-                return "/location/\(ids)"
-            }
-        }
-        
-        var method: HTTPMethod {
-            return .get
-        }
-        
-        var headers: [String: String]? {
-            return nil
-        }
-        
-        var parameters: [String: Any]? {
-            switch self {
-            case .getLocation:
-                return nil
-            case .getResidents(let locationID):
-                return ["location": locationID]
-            case .getCharacters(let ids):
-                return ["character": ids]
-            }
-        }
-        
-        func request() -> URLRequest {
-            guard var components = URLComponents(string: baseURL + path) else {
-                fatalError("Invalid URL")
-            }
+    
+    var path: String {
+        switch self {
+        case .getLocations:
+            return "/location"
+        case .getMultipleCharacters(let ids):
+            return "/character/\("[" + ids + "]")"
+        case .getLocation(let id):
+            return "/location/\(id)"
             
-            if let parameters = parameters {
-                components.queryItems = parameters.map { key, value in
-                    URLQueryItem(name: key, value: "\(value)")
-                }
-            }
-            
-            guard let url = components.url else {
-                fatalError("Invalid URL")
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = method.rawValue
-            request.allHTTPHeaderFields = headers
-            
-            return request
         }
     }
+    
+    var method: HTTPMethod {
+        return .get
+    }
+    
+    var headers: [String: String]? {
+        return nil
+    }
+    
+    func request() -> URLRequest {
+        guard var components = URLComponents(string: baseURL + path) else {
+            fatalError("Invalid URL")
+        }
+        
+        guard let url = components.url else {
+            fatalError("Invalid URL")
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        request.allHTTPHeaderFields = headers
+        
+        return request
+    }
+}

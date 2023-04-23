@@ -8,36 +8,71 @@
 import Foundation
 import Alamofire
 
+import Alamofire
+
 class NetworkManager {
+    
     static let shared = NetworkManager()
+    
+    private let baseUrl = "https://rickandmortyapi.com/api"
+    
     private init() {}
     
-    func request<T: Decodable>(_ endPoint: EndPoint, completion: @escaping (Result<T, Error>) -> Void) {
-        AF.request(endPoint.request()).validate().responseDecodable(of: T.self) { response in
-            switch response.result {
-            case .success(let value):
-                completion(.success(value))
-            case .failure(let error):
-                completion(.failure(error))
+    func getLocations(completion: @escaping (Result<[Location], Error>) -> Void) {
+        let url = "\(baseUrl)/location"
+        AF.request(url)
+            .validate()
+            .responseDecodable(of: LocationData.self) { response in
+                switch response.result {
+                case .success(let locationData):
+                    completion(.success(locationData.results ?? []))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
-        }
     }
-    
-    func getLocations(completion: @escaping (Result<LocationData, Error>) -> Void) {
-        let endPoint = EndPoint.getLocation
-        request(endPoint, completion: completion)
-    }
-    
-    func getResidents(locationID: String, completion: @escaping (Result<LocationData, Error>) -> Void) {
-        let endPoint = EndPoint.getResidents(locationID: locationID)
-        request(endPoint, completion: completion)
-    }
-    
-    func getCharacters(from ids: String,completion:@escaping (Result<CharacterData, Error>) -> Void) {
-        let endPoint = EndPoint.getCharacters(ids: ids)
-        request(endPoint, completion: completion)
-    }
-    
-    
 
+    
+    func getLocation(id: Int, completion: @escaping (Result<[Location], AFError>) -> Void) {
+        let url = "\(baseUrl)/location/\(id)"
+        AF.request(url)
+            .validate()
+            .responseDecodable(of: Location.self) { response in
+                switch response.result {
+                case .success(let location):
+                    completion(.success([location]))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
+    
+    func getMultipleCharacters(ids: String, completion: @escaping (Result<CharacterResponse, AFError>) -> Void) {
+        let url = "\(baseUrl)/character/\(ids)"
+        AF.request(url)
+            .validate()
+            .responseDecodable(of: CharacterResponse.self) { response in
+                switch response.result {
+                case .success(let characterResponse):
+                    completion(.success(characterResponse))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
+    func getSingleCharacters(id: Int, completion: @escaping (Result<CharacterResponse, AFError>) -> Void) {
+        let url = "\(baseUrl)/character/\(id)"
+        AF.request(url)
+            .validate()
+            .responseDecodable(of: CharacterResponse.self) { response in
+                switch response.result {
+                case .success(let characterResponse):
+                    completion(.success(characterResponse))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
+    
 }
+
