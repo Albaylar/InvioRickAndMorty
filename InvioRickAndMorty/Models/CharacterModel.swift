@@ -16,7 +16,7 @@ struct Character: Codable {
     let species: String
     let type: String
     let gender: String
-    let image: URL
+    let image: String
     let url: String
     let created: String
     
@@ -24,6 +24,7 @@ struct Character: Codable {
         case id, name, status, species, type, gender, image, url, created
     }
 }
+
 
 
 
