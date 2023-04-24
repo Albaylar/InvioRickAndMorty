@@ -10,8 +10,11 @@ import Kingfisher
 
 class TableViewCell: UITableViewCell {
     
+    @IBOutlet weak var secondView: UIView!
     @IBOutlet weak var charLabel: UILabel!
     @IBOutlet weak var charImage: UIImageView!
+    @IBOutlet weak var genderImage: UIImageView!
+    
     var button: (() -> Void)?
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -28,5 +31,6 @@ class TableViewCell: UITableViewCell {
     struct CharacterModel {
         let image: URL?
         let name: String?
+        let gender : String?
     }
 }

@@ -60,11 +60,11 @@ class NetworkManager {
                 }
             }
     }
-    func getSingleCharacters(id: Int, completion: @escaping (Result<CharacterResponse, AFError>) -> Void) {
+    func getSingleCharacter(id: Int, completion: @escaping (Result<DetailResponse, AFError>) -> Void) {
         let url = "\(baseUrl)/character/\(id)"
         AF.request(url)
             .validate()
-            .responseDecodable(of: CharacterResponse.self) { response in
+            .responseDecodable(of: DetailResponse.self) { response in
                 switch response.result {
                 case .success(let characterResponse):
                     completion(.success(characterResponse))

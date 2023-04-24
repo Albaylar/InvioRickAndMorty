@@ -10,12 +10,14 @@ import Alamofire
 
 class HomeViewController: UIViewController {
 
+    @IBOutlet weak var chooseLocationLabel: UILabel!
     @IBOutlet weak var rickandmortyImageView: UIImageView!
     @IBOutlet weak var charTableView: UITableView!
     @IBOutlet weak var locationCollectionView: UICollectionView!
 
     private var selectedIndexPath: IndexPath?
     private var selectedLocationId: Int?
+    private var selectedCharacterId: Int?
     private var selectedLocation : [Location] = []
     
     private var locations: [Location] = []
@@ -29,8 +31,6 @@ class HomeViewController: UIViewController {
         setUpTableView()
         setUpCollectionView()
         setLocations()
- 
-        
     }
 
     private func setUpCollectionView() {
@@ -60,7 +60,7 @@ extension HomeViewController: UICollectionViewDelegate {
         print("Selected Location: \(location.name)")
         
         if selectedIndexPath == indexPath {
-            // If user tapped on the same cell again, we don't need to fetch data again
+            
             return
         }
         
@@ -69,7 +69,7 @@ extension HomeViewController: UICollectionViewDelegate {
         if location.residents.isEmpty {
             showError("No residents found.")
         } else {
-            setSelectedLocation(for: selectedLocation) // Seçilen lokasyonu güncelle
+            setSelectedLocation(for: selectedLocation)
         }
         
         collectionView.reloadData()
@@ -93,7 +93,6 @@ extension HomeViewController: UICollectionViewDataSource {
 
         collectionCell.configure(with: locationModel(name: loc.name))
 
-        // Seçilen hücrenin kenarlığını kırmızı yap
         if selectedIndexPath == indexPath {
             collectionCell.layer.borderColor = UIColor.red.cgColor
         } else {
@@ -106,14 +105,24 @@ extension HomeViewController: UICollectionViewDataSource {
 
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let character = characters[indexPath.row]
-            let detailVC = DetailViewController()
-        detailVC.detail = character // Seçilen karakteri DetailViewController'a aktarın
-            navigationController?.pushViewController(detailVC, animated: true) 
-            
-   
+        let selectedCharacter = characters[indexPath.row]
+        print(selectedCharacter.id)
+        NetworkManager.shared.getSingleCharacter(id: selectedCharacter.id) { result in
+            switch result {
+            case .success(let details):
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+                
+                vc.detail = details
+                
+                self.present(vc, animated: true, completion: nil)
+            case .failure(let error):
+                print("Error fetching details: \(error)")
+            }
+        }
     }
 }
+
 
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -123,11 +132,27 @@ extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath) as! TableViewCell
         let character = characters[indexPath.row]
-        let model = TableViewCell.CharacterModel(image: character.image, name: character.name)
-        cell.configure(with: model)
+        let gender = characters[indexPath.row].gender
+        if gender == "Male" {
+            cell.secondView.backgroundColor = UIColor.systemBlue
+            cell.genderImage.image = UIImage(named: "male_image")
+        } else if gender == "Female" {
+            cell.secondView.backgroundColor = UIColor.systemPink
+            cell.genderImage?.image = UIImage(named: "female_image")
+        } else if gender == "unknown" {
+            cell.secondView.backgroundColor = UIColor.systemCyan
+            cell.genderImage?.image = UIImage(named: "unknown_image")
+        }
+        if let imageUrl = URL(string: character.image) {
+            let model = TableViewCell.CharacterModel(image: imageUrl, name: character.name, gender: character.gender)
+            cell.configure(with: model)
+        } else {
+            print("error")
+        }
 
         return cell
     }
+
 
 }
 extension HomeViewController {
@@ -138,9 +163,8 @@ extension HomeViewController {
             switch result {
             case .success(let locations):
                 self.locations = locations
-                
-                // Set the default location to the previously selected location
                 if let selectedLocationId = self.selectedLocationId {
+                    
                     self.setSelectedLocation(for: selectedLocationId)
                 } else {
                     self.locationCollectionView.reloadData()
@@ -158,7 +182,6 @@ extension HomeViewController {
         NetworkManager.shared.getLocation(id: locationID) { [weak self] result in
             switch result {
             case .success(let locations):
-                // Seçilen konumu alın
                 guard let selectedLocation = locations.first else {
                     print("Selected location not found.")
                     return
@@ -169,7 +192,6 @@ extension HomeViewController {
                 print(residentURLs)
                 let residentIDs = residentURLs.compactMap({Int($0.split(separator: "/").last ?? "")})
                 print(residentIDs)
-                //let residentIDStrings = residentIDs.map { String($0) }
                 var residentIDStrings: String = ""
                               residentIDs.forEach { residentId in
                                 if residentIDs.first == residentId {
@@ -188,11 +210,9 @@ extension HomeViewController {
                 NetworkManager.shared.getMultipleCharacters(ids: residentIDStrings) { result in
                     switch result {
                     case .success(let characterResponse):
-                        
+                        self?.chooseLocationLabel.text = ""
                         let characters = characterResponse
-                        self?.characters = characters 
-                        
-                        // Reload the table view data to display the character information
+                        self?.characters = characters
                         DispatchQueue.main.async {
                             self?.charTableView.reloadData()
                         }
@@ -204,7 +224,6 @@ extension HomeViewController {
                         
                     case .failure(let error):
                         print("Error fetching character details: \(error.localizedDescription)")
-                        // Handle the error here
                     }
                 }
                 
