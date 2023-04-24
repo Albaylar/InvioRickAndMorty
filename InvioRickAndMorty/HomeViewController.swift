@@ -20,8 +20,8 @@ class HomeViewController: UIViewController {
     
     private var locations: [Location] = []
     private var characters: [Character] = []
-    var networkManager = NetworkManager.shared
-    var residents: [ResidentData] = []
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()

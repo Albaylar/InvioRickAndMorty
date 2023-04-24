@@ -22,6 +22,7 @@
 		691CF76129EE12EE007AEA02 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691CF75F29EE12EE007AEA02 /* CollectionViewCell.swift */; };
 		691CF76229EE12EE007AEA02 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 691CF76029EE12EE007AEA02 /* CollectionViewCell.xib */; };
 		691CF76429EF6156007AEA02 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691CF76329EF6156007AEA02 /* LocationModel.swift */; };
+		6953ABE529F605D400F7672A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6953ABE429F605D400F7672A /* DetailViewController.swift */; };
 		698C20FC29F4B2EC007798DB /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698C20FB29F4B2EC007798DB /* SplashViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		691CF75F29EE12EE007AEA02 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		691CF76029EE12EE007AEA02 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
 		691CF76329EF6156007AEA02 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
+		6953ABE429F605D400F7672A /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		698C20FB29F4B2EC007798DB /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		CBEB6BFBA9944027F3E5E742 /* Pods-InvioRickAndMorty.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InvioRickAndMorty.debug.xcconfig"; path = "Target Support Files/Pods-InvioRickAndMorty/Pods-InvioRickAndMorty.debug.xcconfig"; sourceTree = "<group>"; };
 		CC94CB9B0D538F66FBF40C3E /* Pods-InvioRickAndMorty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InvioRickAndMorty.release.xcconfig"; path = "Target Support Files/Pods-InvioRickAndMorty/Pods-InvioRickAndMorty.release.xcconfig"; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				691CF74229EE1060007AEA02 /* SceneDelegate.swift */,
 				691CF74429EE1060007AEA02 /* HomeViewController.swift */,
 				698C20FB29F4B2EC007798DB /* SplashViewController.swift */,
+				6953ABE429F605D400F7672A /* DetailViewController.swift */,
 				691CF74629EE1060007AEA02 /* Main.storyboard */,
 				691CF74929EE1061007AEA02 /* Assets.xcassets */,
 				691CF74B29EE1061007AEA02 /* LaunchScreen.storyboard */,
@@ -243,6 +246,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6953ABE529F605D400F7672A /* DetailViewController.swift in Sources */,
 				691CF75A29EE129C007AEA02 /* EndPoint.swift in Sources */,
 				691CF74529EE1060007AEA02 /* HomeViewController.swift in Sources */,
 				691CF76129EE12EE007AEA02 /* CollectionViewCell.swift in Sources */,
