@@ -166,19 +166,28 @@ extension HomeViewController {
                 print(residentURLs)
                 let residentIDs = residentURLs.compactMap({Int($0.split(separator: "/").last ?? "")})
                 print(residentIDs)
-                let residentIDStrings = residentIDs.map { String($0) }
+                //let residentIDStrings = residentIDs.map { String($0) }
+                var residentIDStrings: String = ""
+                              residentIDs.forEach { residentId in
+                                if residentIDs.first == residentId {
+                                  residentIDStrings = "[\(residentId)"
+                                }else {
+                                  residentIDStrings = "\(residentIDStrings),\(residentId)"
+                                }
+                              }
+                              residentIDStrings = "\(residentIDStrings)]"
                 
-                let lastURL = "https://rickandmortyapi.com/api/character/\(residentIDs)"
-                print(lastURL)
+                //let lastURL = "https://rickandmortyapi.com/api/character/\(residentIDs)"
+                //print(lastURL)
 
                 
                 // Karakterleri alma isteği oluştur
-                NetworkManager.shared.getMultipleCharacters(ids: lastURL) { result in
+                NetworkManager.shared.getMultipleCharacters(ids: residentIDStrings) { result in
                     switch result {
                     case .success(let characterResponse):
                         
-                        let characters = characterResponse.results
-                        self?.characters = characters ?? []
+                        let characters = characterResponse
+                        self?.characters = characters 
                         
                         // Reload the table view data to display the character information
                         DispatchQueue.main.async {

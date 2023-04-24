@@ -7,9 +7,7 @@
 
 import Foundation
 
-struct CharacterResponse : Codable {
-    let results : [Character]?
-}
+typealias CharacterResponse = [Character]
 
 struct Character: Codable {
     let id: Int

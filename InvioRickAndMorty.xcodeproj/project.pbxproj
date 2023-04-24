@@ -22,7 +22,6 @@
 		691CF76129EE12EE007AEA02 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691CF75F29EE12EE007AEA02 /* CollectionViewCell.swift */; };
 		691CF76229EE12EE007AEA02 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 691CF76029EE12EE007AEA02 /* CollectionViewCell.xib */; };
 		691CF76429EF6156007AEA02 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691CF76329EF6156007AEA02 /* LocationModel.swift */; };
-		691CF76629EF6469007AEA02 /* ResidentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691CF76529EF6469007AEA02 /* ResidentData.swift */; };
 		698C20FC29F4B2EC007798DB /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698C20FB29F4B2EC007798DB /* SplashViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,7 +42,6 @@
 		691CF75F29EE12EE007AEA02 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		691CF76029EE12EE007AEA02 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
 		691CF76329EF6156007AEA02 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
-		691CF76529EF6469007AEA02 /* ResidentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResidentData.swift; sourceTree = "<group>"; };
 		698C20FB29F4B2EC007798DB /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		CBEB6BFBA9944027F3E5E742 /* Pods-InvioRickAndMorty.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InvioRickAndMorty.debug.xcconfig"; path = "Target Support Files/Pods-InvioRickAndMorty/Pods-InvioRickAndMorty.debug.xcconfig"; sourceTree = "<group>"; };
 		CC94CB9B0D538F66FBF40C3E /* Pods-InvioRickAndMorty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InvioRickAndMorty.release.xcconfig"; path = "Target Support Files/Pods-InvioRickAndMorty/Pods-InvioRickAndMorty.release.xcconfig"; sourceTree = "<group>"; };
@@ -106,7 +104,6 @@
 				691CF75C29EE12D5007AEA02 /* TableViewCell.xib */,
 				691CF75F29EE12EE007AEA02 /* CollectionViewCell.swift */,
 				691CF76029EE12EE007AEA02 /* CollectionViewCell.xib */,
-				691CF76529EF6469007AEA02 /* ResidentData.swift */,
 			);
 			path = InvioRickAndMorty;
 			sourceTree = "<group>";
@@ -253,7 +250,6 @@
 				691CF76429EF6156007AEA02 /* LocationModel.swift in Sources */,
 				691CF75829EE1286007AEA02 /* NetworkManager.swift in Sources */,
 				691CF75629EE1252007AEA02 /* CharacterModel.swift in Sources */,
-				691CF76629EF6469007AEA02 /* ResidentData.swift in Sources */,
 				691CF75D29EE12D5007AEA02 /* TableViewCell.swift in Sources */,
 				691CF74329EE1060007AEA02 /* SceneDelegate.swift in Sources */,
 				698C20FC29F4B2EC007798DB /* SplashViewController.swift in Sources */,
