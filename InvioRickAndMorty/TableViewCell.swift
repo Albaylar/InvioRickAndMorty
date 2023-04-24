@@ -12,8 +12,10 @@ class TableViewCell: UITableViewCell {
     
     @IBOutlet weak var charLabel: UILabel!
     @IBOutlet weak var charImage: UIImageView!
+    var button: (() -> Void)?
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         
     }
     func configure(with model: CharacterModel) {

@@ -106,8 +106,11 @@ extension HomeViewController: UICollectionViewDataSource {
 
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            let char = characters[indexPath.row]
-            print("Selected Character: \(char.name)")
+        let character = characters[indexPath.row]
+            let detailVC = DetailViewController()
+        detailVC.detail = character // Seçilen karakteri DetailViewController'a aktarın
+            navigationController?.pushViewController(detailVC, animated: true) 
+            
    
     }
 }
@@ -120,7 +123,7 @@ extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath) as! TableViewCell
         let character = characters[indexPath.row]
-        let model = TableViewCell.CharacterModel(image: URL(string: character.image), name: character.name)
+        let model = TableViewCell.CharacterModel(image: character.image, name: character.name)
         cell.configure(with: model)
 
         return cell

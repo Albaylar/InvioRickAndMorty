@@ -6,27 +6,36 @@
 //
 
 import UIKit
+import Kingfisher
 
 class DetailViewController: UIViewController {
 
     @IBOutlet weak var detailGender: UILabel!
     @IBOutlet weak var detailName: UILabel!
     @IBOutlet weak var detailImageView: UIImageView!
+    var detail: Character?
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateData()
 
         // Do any additional setup after loading the view.
     }
     
+    func updateData(){
+        detailName.text = "Name : \(detail?.name ?? "")"
+        detailGender.text = "Gender : \(detail?.gender ?? "")"
+        
+        
+        // Pokemon verisinin yetenekleri varsa bunları bir dizi olarak birleştiririz ve abiltyName değişkenine atarız.Compact mapi kullanmamızın nedeni Optional değerleri filtrelemek ve dizideki nil değerleri çıkarmak için kullanıyoruz.
 
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        
+        //detailImageView.kf.setImage(with: detail?.image)
+        
     }
-    */
 
 }
+
